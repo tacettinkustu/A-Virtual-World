@@ -5,12 +5,12 @@ class Graph {
   }
 
   static load(info) {
-    const points = info.points.map((p) => new Point(p.x, p.y));
+    const points = info.points.map((i) => new Point(i.x, i.y));
     const segments = info.segments.map(
-      (s) =>
+      (i) =>
         new Segment(
-          points.find((p) => p.equals(s.p1)),
-          points.find((p) => p.equals(s.p2))
+          points.find((p) => p.equals(i.p1)),
+          points.find((p) => p.equals(i.p2))
         )
     );
     return new Graph(points, segments);
@@ -66,9 +66,9 @@ class Graph {
 
   getSegmentsWithPoint(point) {
     const segs = [];
-    for (const s of this.segments) {
-      if (s.includes(point)) {
-        segs.push(s);
+    for (const seg of this.segments) {
+      if (seg.includes(point)) {
+        segs.push(seg);
       }
     }
     return segs;

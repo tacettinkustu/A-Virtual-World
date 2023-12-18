@@ -5,26 +5,29 @@ class Point {
   }
 
   equals(point) {
-    return this.x === point.x && this.y === point.y;
+    return this.x == point.x && this.y == point.y;
   }
 
-  draw(ctx, { size = 18, color = 'black', outline = false, fill = false } = {}) {
+  draw(
+    ctx,
+    { size = 18, color = 'black', outline = false, fill = false } = {}
+  ) {
     const rad = size / 2;
-    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.arc(this.x, this.y, rad, 0, 2 * Math.PI);
+    ctx.fillStyle = color;
+    ctx.arc(this.x, this.y, rad, 0, Math.PI * 2);
     ctx.fill();
     if (outline) {
-      ctx.strokeStyle = 'yellow';
-      ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.arc(this.x, this.y, rad * 0.6, 0, 2 * Math.PI);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = 'yellow';
+      ctx.arc(this.x, this.y, rad * 0.6, 0, Math.PI * 2);
       ctx.stroke();
     }
     if (fill) {
-      ctx.fillStyle = 'yellow';
       ctx.beginPath();
-      ctx.arc(this.x, this.y, rad * 0.4, 0, 2 * Math.PI);
+      ctx.arc(this.x, this.y, rad * 0.4, 0, Math.PI * 2);
+      ctx.fillStyle = 'yellow';
       ctx.fill();
     }
   }

@@ -27,15 +27,12 @@ class Viewport {
     this.ctx.translate(offset.x, offset.y);
   }
 
-  getMouse(e, subtractDragOffset = false) {
+  getMouse(evt, subtractDragOffset = false) {
     const p = new Point(
-      (e.offsetX - this.center.x) * this.zoom - this.offset.x,
-      (e.offsetY - this.center.y) * this.zoom - this.offset.y
+      (evt.offsetX - this.center.x) * this.zoom - this.offset.x,
+      (evt.offsetY - this.center.y) * this.zoom - this.offset.y
     );
-    if (subtractDragOffset) {
-      return subtract(p, this.drag.offset);
-    }
-    return p;
+    return subtractDragOffset ? subtract(p, this.drag.offset) : p;
   }
 
   getOffset() {
@@ -52,21 +49,22 @@ class Viewport {
     this.canvas.addEventListener('mouseup', this.#handleMouseUp.bind(this));
   }
 
-  #handleMouseDown(e) {
-    if (e.button == 1) {
+  #handleMouseDown(evt) {
+    if (evt.button == 1) {
+      // middle button
+      this.drag.start = this.getMouse(evt);
       this.drag.active = true;
-      this.drag.start = this.getMouse(e);
     }
   }
 
-  #handleMouseMove(e) {
+  #handleMouseMove(evt) {
     if (this.drag.active) {
-      this.drag.end = this.getMouse(e);
+      this.drag.end = this.getMouse(evt);
       this.drag.offset = subtract(this.drag.end, this.drag.start);
     }
   }
 
-  #handleMouseUp(e) {
+  #handleMouseUp(evt) {
     if (this.drag.active) {
       this.offset = add(this.offset, this.drag.offset);
       this.drag = {
@@ -78,20 +76,10 @@ class Viewport {
     }
   }
 
-  #handleMouseWheel(e) {
-    e.preventDefault();
-    const dir = Math.sign(e.deltaY);
+  #handleMouseWheel(evt) {
+    const dir = Math.sign(evt.deltaY);
     const step = 0.1;
     this.zoom += dir * step;
     this.zoom = Math.max(1, Math.min(5, this.zoom));
-  }
-
-  draw(graph) {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.save();
-    this.ctx.scale(this.zoom, this.zoom);
-    this.ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
-    graph.draw(this.ctx);
-    this.ctx.restore();
   }
 }
