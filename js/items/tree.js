@@ -29,6 +29,5 @@ class Tree {
       const poly = this.#generateLevel(point, size);
       poly.draw(ctx, { fill: color, stroke: 'rgba(0,0,0,0)' });
     }
-    this.base.draw(ctx);
   }
 }
